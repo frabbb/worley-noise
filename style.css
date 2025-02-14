@@ -1,9 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monospace;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   height: 100vh;
 }
 
@@ -13,4 +20,48 @@ canvas {
   left: 50%;
   transform: translateX(-50%);
   /* filter: contrast(1.2); */
+}
+
+.commands {
+  position: fixed;
+  z-index: 2;
+  top: 10px;
+  left: 10px;
+  border-radius: 5px;
+  backdrop-filter: blur(20px);
+  display: grid;
+  gap: 20px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  accent-color: white;
+}
+
+.channel {
+  display: grid;
+  gap: 5px;
+}
+
+.intensity,
+.invert {
+  display: flex;
+  gap: 5px;
+}
+
+.ranges {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 2px;
+  border-radius: 4px;
+  border: 0;
+  background-color: rgba(255, 255, 255, 0.9);
 }

@@ -7,6 +7,19 @@ uniform vec2 u_mouse;
 
 uniform float u_time;
 uniform float u_z;
+uniform float u_invert;
+
+uniform float u_range_min_r;
+uniform float u_range_min_g;
+uniform float u_range_min_b;
+
+uniform float u_range_max_r;
+uniform float u_range_max_g;
+uniform float u_range_max_b;
+
+uniform float u_intensity_r;
+uniform float u_intensity_g;
+uniform float u_intensity_b;
 
 const int TOTAL_POINTS = 200; 
 
@@ -15,7 +28,7 @@ uniform float u_points[(TOTAL_POINTS + 1) * 3];
 
 void main() {
 
-    float max_dist = 1.732;
+    float max_dist = 1.0;
 
     float m_dist = max_dist; 
 
@@ -29,21 +42,29 @@ void main() {
     }
 
     float color =  m_dist;
-    
-    float edge = 1.0 - smoothstep(0.0, 0.3, color);
-    edge = pow(edge, 0.1);
-    edge = smoothstep(0.7, 1.0, edge);
 
-    color *= 6.0;
-    // color = smoothstep(0.0, 0.1, color);
-    color = 1.0 - color;
+    // color *= 2.4;
+    // color = smoothstep(0.2, 1.0, color);
+    color = 1.0 - u_invert + (-1.0 + 2.0 * u_invert) * color;
 
-    float r = smoothstep(0.3, 0.65, color);
-    float g = smoothstep(0.15, 0.7, color);
-    float b = smoothstep(0.0, 0.95, color);
+    float enhanceR = smoothstep(u_range_min_r, u_range_max_r, color) * u_intensity_r;
+    float enhanceG = smoothstep(u_range_min_g, u_range_max_g, color) * u_intensity_g;
+    float enhanceB = smoothstep(u_range_min_b, u_range_max_b, color) * u_intensity_b;
+    // color += enhance;
+
+    float r = color + enhanceR;
+    float g = color + enhanceG;
+    float b = color + enhanceB;
+
+    // r = 1.0 - u_invert + (-1.0 + 2.0 * u_invert) * r;
+    // g = 1.0 - u_invert + (-1.0 + 2.0 * u_invert) * g;
+    // b = 1.0 - u_invert + (-1.0 + 2.0 * u_invert) * b;
+    // float r = smoothstep(0.3, 0.65, color);
+    // float g = smoothstep(0.15, 0.7, color);
+    // float b = smoothstep(0.0, 0.95, color);
 
 
 
+    // gl_FragColor = vec4(r, g, b, 1.0);
     gl_FragColor = vec4(r, g, b, 1.0);
-    // gl_FragColor = vec4(edge, edge, edge, 1.0);
 }
