@@ -38,11 +38,30 @@ canvas.static {
   position: static;
 }
 
-.commands {
+.overlay {
   position: fixed;
   z-index: 2;
-  top: 10px;
-  left: 10px;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+button {
+  border: 0;
+  border-radius: 5px;
+  padding: 3px;
+  background-color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: lightgrey;
+}
+
+.commands {
   border-radius: 5px;
   backdrop-filter: blur(20px);
   display: grid;
@@ -51,7 +70,7 @@ canvas.static {
   background-color: rgba(0, 0, 0, 0.3);
   color: white;
   accent-color: white;
-  width: 25%;
+  width: 25vw;
   min-width: 150px;
 }
 

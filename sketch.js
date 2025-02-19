@@ -76,11 +76,12 @@ function resize() {
   resizeCanvas(width, height);
 }
 
-function keyPressed() {
-  if (key === "s") {
-    saveCanvas("worley.jpg");
-  }
+function dowload() {
+  saveCanvas("worley.jpg");
 }
+
+const donwloadBtn = document.querySelector(".download");
+donwloadBtn.addEventListener("click", dowload);
 
 class Point {
   constructor({ pos }) {
@@ -91,6 +92,5 @@ class Point {
 window.preload = preload;
 window.setup = setup;
 window.draw = draw;
-window.keyPressed = keyPressed;
 
 export { resize };
