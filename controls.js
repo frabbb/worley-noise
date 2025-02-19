@@ -41,19 +41,6 @@ let controls = [
   {
     fields: [
       {
-        label: "Exposure",
-        key: "exposure",
-        type: "range",
-        min: 1,
-        max: 10,
-        step: 0.1,
-        value: 7,
-      },
-    ],
-  },
-  {
-    fields: [
-      {
         label: "Points size",
         key: "size",
         type: "range",
@@ -61,6 +48,19 @@ let controls = [
         max: 1,
         step: 0.01,
         value: 1,
+      },
+    ],
+  },
+  {
+    fields: [
+      {
+        label: "Exposure",
+        key: "exposure",
+        type: "range",
+        min: 1,
+        max: 10,
+        step: 0.1,
+        value: 7,
       },
     ],
   },
@@ -118,6 +118,15 @@ controls.forEach((group) => {
       label.classList.add("label");
       label.innerHTML = field.value;
       fieldEl.appendChild(label);
+
+      if (field.type === "range") {
+        label.style.marginLeft = `${
+          ((field.value - field.min) / (field.max - field.min)) * 100
+        }%`;
+        label.style.transform = `translate(-${
+          ((field.value - field.min) / (field.max - field.min)) * 100
+        }%, 0)`;
+      }
     }
 
     input.addEventListener("input", () => {
