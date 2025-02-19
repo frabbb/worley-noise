@@ -9,17 +9,33 @@ html,
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   /* overflow-y: hidden; */
   height: 100vh;
 }
 
+main {
+  position: relative;
+  min-width: 100%;
+  min-height: 100vh;
+  background-color: darkgray;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 canvas {
   display: block;
-  position: relative;
+  position: absolute;
   left: 50%;
-  transform: translateX(-50%);
-  /* filter: contrast(1.2); */
+  top: 50%;
+  transform-origin: center;
+  transform: translate(-50%, -50%) scale(var(--scale));
+}
+
+canvas.static {
+  position: static;
 }
 
 .commands {
@@ -35,23 +51,46 @@ canvas {
   background-color: rgba(0, 0, 0, 0.3);
   color: white;
   accent-color: white;
+  width: 25%;
+  min-width: 150px;
 }
 
-.channel {
-  display: grid;
-  gap: 5px;
-}
-
-.intensity,
-.invert {
-  display: flex;
-  gap: 5px;
-}
-
-.ranges {
+.fields {
   display: flex;
   justify-content: space-between;
   gap: 5px;
+}
+
+.field {
+  width: 100%;
+}
+
+.field > p {
+  margin-bottom: 5px;
+}
+
+.field:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.field:has(input[type="range"]) > .label {
+  width: fit-content;
+  margin-bottom: 0;
+}
+
+.field:has(input[type="checkbox"]) > p {
+  margin: 0;
+}
+
+.group > p {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+input {
+  color: black;
 }
 
 input[type="range"] {
