@@ -1,4 +1,4 @@
-import { resize } from "./sketch.js";
+import { n, resize, restart } from "./sketch.js";
 
 const container = document.querySelector(".commands");
 let controls = [
@@ -31,42 +31,56 @@ let controls = [
       {
         label: "Number of points",
         key: "number",
-        type: "number",
+        type: "range",
         min: 1,
         max: 100,
-        value: 2,
+        value: n,
+        onUpdate: restart,
       },
     ],
   },
   {
     fields: [
       {
-        label: "Points size",
+        label: "Point Size",
         key: "size",
         type: "range",
         min: 0.01,
         max: 1,
         step: 0.01,
-        value: 1,
+        value: 0.8,
       },
     ],
   },
   {
     fields: [
       {
-        label: "Exposure",
-        key: "exposure",
-        type: "range",
-        min: 1,
-        max: 10,
-        step: 0.1,
-        value: 7,
+        label: "Exposure range",
+        key: "range",
+        type: "dualrange",
+        min: 0,
+        max: 1,
+        step: 0.01,
+        value: [0.15, 0.7],
       },
     ],
   },
   {
     fields: [
-      { label: "Animate", key: "animate", type: "checkbox", checked: false },
+      {
+        label: "Speed",
+        key: "speed",
+        type: "range",
+        min: 0,
+        max: 2,
+        step: 0.01,
+        value: 0.5,
+      },
+    ],
+  },
+  {
+    fields: [
+      { label: "Animate", key: "animate", type: "checkbox", checked: true },
     ],
   },
 ];
@@ -107,9 +121,107 @@ controls.forEach((group) => {
       fieldEl.appendChild(label);
     }
 
+    const inputWrapper = document.createElement("div");
+    inputWrapper.classList.add("input-wrapper");
+    fieldEl.appendChild(inputWrapper);
+
+    if (field.type === "dualrange") {
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("dual-range");
+      inputWrapper.appendChild(wrapper);
+
+      let minInput = document.createElement("input");
+      let maxInput = document.createElement("input");
+
+      const inputs = [minInput, maxInput];
+
+      settings[field.key] = field.value;
+
+      const labelWrapper = document.createElement("div");
+      labelWrapper.classList.add("label-wrapper");
+
+      const selection = document.createElement("div");
+      selection.classList.add("selection");
+      wrapper.appendChild(selection);
+
+      selection.style.marginLeft = `${
+        ((field.value[0] - field.min) / (field.max - field.min)) * 100
+      }%`;
+      selection.style.width = `${
+        ((field.value[1] - field.value[0] - field.min) /
+          (field.max - field.min)) *
+        100
+      }%`;
+
+      inputs.forEach((input, index) => {
+        wrapper.appendChild(input);
+
+        input.type = "range";
+        input.min = field.min;
+        input.max = field.max;
+        input.step = field.step;
+        input.value = field.value[index];
+
+        const label = document.createElement("p");
+        label.classList.add("label");
+        label.innerHTML = field.value[index];
+
+        labelWrapper.appendChild(label);
+
+        label.style.marginLeft = `${
+          ((field.value[index] - field.min) / (field.max - field.min)) * 100
+        }%`;
+        label.style.transform = `translate(-${
+          ((field.value[index] - field.min) / (field.max - field.min)) * 100
+        }%, 0)`;
+
+        input.addEventListener("input", () => {
+          let v = Number(input.value);
+          let min = settings[field.key][0];
+          let max = settings[field.key][1];
+
+          if (index === 0) {
+            if (v >= max) {
+              v = max;
+            }
+          } else if (index === 1) {
+            if (v <= min) {
+              v = min;
+            }
+          }
+
+          input.value = v;
+          settings[field.key][index] = v;
+
+          label.innerHTML = v;
+
+          label.style.marginLeft = `${
+            ((v - field.min) / (field.max - field.min)) * 100
+          }%`;
+          label.style.transform = `translate(-${
+            ((v - field.min) / (field.max - field.min)) * 100
+          }%, 0)`;
+
+          selection.style.marginLeft = `${
+            ((field.value[0] - field.min) / (field.max - field.min)) * 100
+          }%`;
+          selection.style.width = `${
+            ((field.value[1] - field.value[0] - field.min) /
+              (field.max - field.min)) *
+            100
+          }%`;
+        });
+      });
+
+      wrapper.appendChild(labelWrapper);
+
+      return;
+    }
+
     const input = document.createElement("input");
+    field.el = input;
     Object.entries(field).forEach(([key, value]) => (input[key] = value));
-    fieldEl.appendChild(input);
+    inputWrapper.appendChild(input);
 
     let label;
 
@@ -157,6 +269,19 @@ controls.forEach((group) => {
       }
     });
   });
+});
+
+document.addEventListener("keypress", (e) => {
+  if (e.code === "Space") {
+    settings.animate = !settings.animate;
+
+    const field = controls
+      .map((g) => g.fields)
+      .flat()
+      .find((f) => f.key === "animate");
+
+    field.el.checked = settings.animate;
+  }
 });
 
 export { settings };

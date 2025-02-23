@@ -1,15 +1,28 @@
 import { settings } from "./controls.js";
+import { frag, vert } from "./shader.js";
 
-let n = 10;
+let n = 20;
 let points = [];
 let worleyShader;
 let observationPoint;
-let delta = 0.001;
-const zDistribution = 0;
+let delta;
+const zDistribution = 1;
 let canvas;
+let paused = false;
+let goingBackwards = false;
+
+function createPoints() {
+  points = [];
+
+  for (let i = 0; i < n; i++) {
+    let randomPos = createVector(random(), random(), random(zDistribution));
+    const point = new Point({ pos: randomPos });
+    points.push(point);
+  }
+}
 
 function preload() {
-  worleyShader = loadShader("shader.vert", "shader.frag");
+  worleyShader = createShader(vert, frag(n));
 }
 
 function setup() {
@@ -17,23 +30,31 @@ function setup() {
   resize();
   noStroke();
 
-  observationPoint = 0;
+  createPoints();
 
-  for (let i = 0; i < n; i++) {
-    let randomPos = createVector(random(), random(), random(zDistribution));
-    const point = new Point({ pos: randomPos });
-    points.push(point);
-  }
+  observationPoint = 0;
 
   worleyShader.setUniform("u_resolution", createVector(width, height));
 }
 
 function draw() {
+  if (paused) return;
   background(220);
 
-  observationPoint += delta;
-  delta =
-    observationPoint >= zDistribution || observationPoint <= 0 ? -delta : delta;
+  delta = settings.speed * 0.002;
+
+  if (settings.animate) {
+    // goingBackwards = observationPoint >= zDistribution || observationPoint <= 0;
+
+    delta = delta * (goingBackwards ? -1 : 1);
+    if (observationPoint + delta >= zDistribution) {
+      goingBackwards = true;
+    } else if (observationPoint + delta <= 0) {
+      goingBackwards = false;
+    }
+
+    observationPoint += delta;
+  }
 
   const normalizedMouse = [mouseX / width, (height - mouseY) / height];
 
@@ -50,6 +71,7 @@ function draw() {
   worleyShader.setUniform("u_contrast", settings.size);
   worleyShader.setUniform("u_n", n);
   worleyShader.setUniform("u_exposure", settings.exposure);
+  worleyShader.setUniform("u_range", settings.range);
 
   shader(worleyShader);
 
@@ -76,6 +98,19 @@ function resize() {
   resizeCanvas(width, height);
 }
 
+async function restart() {
+  n = settings.number;
+
+  if (paused) return;
+
+  paused = true;
+
+  worleyShader = createShader(vert, frag(n));
+  createPoints();
+
+  paused = false;
+}
+
 function dowload() {
   saveCanvas("worley.jpg");
 }
@@ -93,4 +128,4 @@ window.preload = preload;
 window.setup = setup;
 window.draw = draw;
 
-export { resize };
+export { n, resize, restart };
