@@ -95,6 +95,7 @@ function resize() {
     canvas.elt.clasList?.add("static");
   }
 
+  console.log(width, height);
   resizeCanvas(width, height);
 }
 
