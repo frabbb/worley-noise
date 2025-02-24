@@ -42,6 +42,20 @@ let controls = [
   {
     fields: [
       {
+        label: "Z Distribution",
+        key: "zDistribution",
+        type: "range",
+        min: 0,
+        max: 1,
+        value: 1,
+        step: 0.01,
+        onUpdate: restart,
+      },
+    ],
+  },
+  {
+    fields: [
+      {
         label: "Point Size",
         key: "size",
         type: "range",

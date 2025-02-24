@@ -8,7 +8,6 @@ let points = [];
 let worleyShader;
 let observationPoint;
 let delta;
-const zDistribution = 1;
 let canvas;
 let paused = false;
 let goingBackwards = false;
@@ -23,7 +22,11 @@ function createPoints() {
   points = [];
 
   for (let i = 0; i < n; i++) {
-    let randomPos = createVector(random(), random(), random(zDistribution));
+    let randomPos = createVector(
+      random(),
+      random(),
+      random(settings.zDistribution)
+    );
     const point = new Point({ pos: randomPos });
     points.push(point);
   }
@@ -55,14 +58,14 @@ function draw() {
   background(220);
 
   timeLimit = Math.round(
-    (zDistribution * 2) / (settings.speed * speedMultiplier)
+    (settings.zDistribution * 2) / (settings.speed * speedMultiplier)
   );
 
   delta = settings.speed * speedMultiplier;
 
   if (settings.animate) {
     delta = delta * (goingBackwards ? -1 : 1);
-    if (observationPoint + delta >= zDistribution) {
+    if (observationPoint + delta >= settings.zDistribution) {
       goingBackwards = true;
     } else if (observationPoint + delta <= 0) {
       goingBackwards = false;
