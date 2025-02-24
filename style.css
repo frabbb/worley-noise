@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: monospace;
+  letter-spacing: -0.02em;
 }
 
 html,
@@ -51,7 +52,7 @@ canvas.static {
 button {
   border: 0;
   border-radius: 5px;
-  padding: 3px;
+  padding: 5px;
   background-color: white;
   font-weight: bold;
   cursor: pointer;
@@ -65,7 +66,7 @@ button:hover {
   border-radius: 5px;
   backdrop-filter: blur(20px);
   display: grid;
-  gap: 20px;
+  gap: 30px;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.3);
   color: white;
@@ -105,7 +106,6 @@ button:hover {
 
 .group > p {
   margin-bottom: 10px;
-  font-size: 1.1em;
 }
 
 input {
@@ -118,10 +118,10 @@ input[type="range"] {
 
 input[type="number"] {
   width: 100%;
-  padding: 2px;
+  padding: 5px;
   border-radius: 4px;
   border: 0;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .dual-range {
@@ -187,8 +187,8 @@ input[type="range"] {
   position: absolute;
 }
 
-.input-wrapper {
-  padding: 15px 0;
+.input-wrapper:has(input[type="range"]) {
+  padding: 12px 0 15px;
   position: relative;
 }
 

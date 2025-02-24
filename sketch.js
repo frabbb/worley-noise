@@ -1,7 +1,7 @@
 import { settings } from "./controls.js";
 import { frag, vert } from "./shader.js";
 
-let n = 20;
+let n = 50;
 let points = [];
 let worleyShader;
 let observationPoint;
@@ -27,6 +27,7 @@ function preload() {
 
 function setup() {
   canvas = createCanvas(settings.canvas.width, settings.canvas.height, WEBGL);
+  pixelDensity(1);
   resize();
   noStroke();
 
@@ -34,7 +35,7 @@ function setup() {
 
   observationPoint = 0;
 
-  worleyShader.setUniform("u_resolution", createVector(width, height));
+  console.log(width / height);
 }
 
 function draw() {
@@ -59,6 +60,8 @@ function draw() {
   const normalizedMouse = [mouseX / width, (height - mouseY) / height];
 
   worleyShader.setUniform("u_z", observationPoint);
+
+  worleyShader.setUniform("u_ratio", width / height);
 
   worleyShader.setUniform("u_points", [
     ...points.flatMap((p) => [p.pos.x, p.pos.y, p.pos.z]),
@@ -95,8 +98,9 @@ function resize() {
     canvas.elt.clasList?.add("static");
   }
 
-  console.log(width, height);
   resizeCanvas(width, height);
+
+  console.log(width / height);
 }
 
 async function restart() {
