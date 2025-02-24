@@ -1,6 +1,8 @@
 import { settings } from "./controls.js";
 import { frag, vert } from "./shader.js";
 
+let capturer;
+
 let n = 50;
 let points = [];
 let worleyShader;
@@ -10,6 +12,12 @@ const zDistribution = 1;
 let canvas;
 let paused = false;
 let goingBackwards = false;
+let speedMultiplier = 0.002;
+
+let recording = false;
+let timeLimit = 0;
+let recordedFrames = 0;
+let fps = 30;
 
 function createPoints() {
   points = [];
@@ -23,6 +31,12 @@ function createPoints() {
 
 function preload() {
   worleyShader = createShader(vert, frag(n));
+
+  capturer = new CCapture({
+    framerate: fps,
+    format: "webm",
+    name: "worley",
+  });
 }
 
 function setup() {
@@ -34,19 +48,19 @@ function setup() {
   createPoints();
 
   observationPoint = 0;
-
-  console.log(width / height);
 }
 
 function draw() {
   if (paused) return;
   background(220);
 
-  delta = settings.speed * 0.002;
+  timeLimit = Math.round(
+    (zDistribution * 2) / (settings.speed * speedMultiplier)
+  );
+
+  delta = settings.speed * speedMultiplier;
 
   if (settings.animate) {
-    // goingBackwards = observationPoint >= zDistribution || observationPoint <= 0;
-
     delta = delta * (goingBackwards ? -1 : 1);
     if (observationPoint + delta >= zDistribution) {
       goingBackwards = true;
@@ -80,6 +94,16 @@ function draw() {
 
   // Draw a plane that fills the canvas
   plane(width, height);
+
+  if (recording) {
+    if (recordedFrames === timeLimit) {
+      toggleRecord();
+      return;
+    }
+    requestAnimationFrame(draw);
+    capturer.capture(canvas.elt);
+    recordedFrames++;
+  }
 }
 
 function resize() {
@@ -93,14 +117,12 @@ function resize() {
   canvas.elt.style = `--scale:${scale}`;
 
   if (scale <= 1) {
-    canvas.elt.clasList?.remove("static");
+    canvas.elt.classList?.remove("static");
   } else {
-    canvas.elt.clasList?.add("static");
+    canvas.elt.classList?.add("static");
   }
 
   resizeCanvas(width, height);
-
-  console.log(width / height);
 }
 
 async function restart() {
@@ -120,8 +142,34 @@ function dowload() {
   saveCanvas("worley.jpg");
 }
 
+const recordBtn = document.querySelector(".record");
+let play = recordBtn.querySelector(".play");
+let stop = recordBtn.querySelector(".stop");
+
+function toggleRecord() {
+  if (recording) {
+    capturer.stop();
+    capturer.save();
+  } else {
+    setTimeout(() => {
+      draw();
+    }, 0);
+
+    observationPoint = 0;
+    recordedFrames = 0;
+    capturer.start();
+  }
+
+  recording = !recording;
+
+  play.classList.toggle("hidden");
+  stop.classList.toggle("hidden");
+}
+
 const donwloadBtn = document.querySelector(".download");
 donwloadBtn.addEventListener("click", dowload);
+
+recordBtn.addEventListener("click", toggleRecord);
 
 class Point {
   constructor({ pos }) {

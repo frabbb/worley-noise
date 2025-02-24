@@ -62,6 +62,21 @@ button:hover {
   background-color: lightgrey;
 }
 
+button svg {
+  height: 15px;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
 .commands {
   border-radius: 5px;
   backdrop-filter: blur(20px);
