@@ -1,4 +1,4 @@
-import { n, resize, restart } from "./sketch.js";
+import { n, resize, restart, toggleAnimation } from "./sketch.js";
 
 const container = document.querySelector(".commands");
 let controls = [
@@ -94,7 +94,13 @@ let controls = [
   },
   {
     fields: [
-      { label: "Animate", key: "animate", type: "checkbox", checked: true },
+      {
+        label: "Animate",
+        key: "animate",
+        type: "checkbox",
+        checked: true,
+        onUpdate: toggleAnimation,
+      },
     ],
   },
 ];
@@ -295,6 +301,8 @@ document.addEventListener("keypress", (e) => {
       .find((f) => f.key === "animate");
 
     field.el.checked = settings.animate;
+
+    toggleAnimation();
   }
 });
 

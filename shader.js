@@ -66,7 +66,8 @@ void main() {
 
     color = smoothstep(max_dist * u_range.x, max_dist * u_range.y, color);
 
-    color = (1.0 - vTexCoord.x) + (vTexCoord.x * 2.0 - 1.0) * color;
+    color = 1.0 - color;
+    // color = (1.0 - vTexCoord.x) + (vTexCoord.x * 2.0 - 1.0) * color;
 
 
     gl_FragColor = vec4(color, color, color, 1.0);

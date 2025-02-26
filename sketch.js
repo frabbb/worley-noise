@@ -18,6 +18,10 @@ let timeLimit = 0;
 let recordedFrames = 0;
 let fps = 30;
 
+let progressEl = document.querySelector(".progress");
+let progressPercentageEl = document.querySelector(".progress-percentage");
+let abortBtn = document.querySelector(".abort");
+
 function createPoints() {
   points = [];
 
@@ -98,6 +102,16 @@ function draw() {
   // Draw a plane that fills the canvas
   plane(width, height);
 
+  strokeWeight(1);
+  blendMode(DIFFERENCE);
+
+  translate(-width / 2, -height / 2, 1);
+  for (let i = 0; i <= width; i++) {
+    let color = lerp(0, 255, i / width);
+    stroke(color);
+    line(i, 0, i, height);
+  }
+
   if (recording) {
     if (recordedFrames === timeLimit) {
       toggleRecord();
@@ -106,6 +120,11 @@ function draw() {
     requestAnimationFrame(draw);
     capturer.capture(canvas.elt);
     recordedFrames++;
+
+    progressPercentageEl.innerHTML = `${Math.round(
+      (recordedFrames / timeLimit) * 100
+    )}%`;
+    progressEl.style = `--progress: ${(recordedFrames / timeLimit) * 100}%`;
   }
 }
 
@@ -142,37 +161,61 @@ async function restart() {
 }
 
 function dowload() {
-  saveCanvas("worley.jpg");
+  if (!settings.animate) {
+    saveCanvas("worley.jpg");
+  } else {
+    toggleRecord();
+  }
 }
 
-const recordBtn = document.querySelector(".record");
-let play = recordBtn.querySelector(".play");
-let stop = recordBtn.querySelector(".stop");
+// const recordBtn = document.querySelector(".record");
+// let play = recordBtn.querySelector(".play");
+// let stop = recordBtn.querySelector(".stop");
 
-function toggleRecord() {
+function toggleRecord(shouldSave = true) {
+  progressEl.style = "--progress: 0px";
+  progressPercentageEl.innerHTML = "";
+
   if (recording) {
+    downloadBtn.classList.remove("disabled");
     capturer.stop();
-    capturer.save();
+    if (shouldSave) {
+      capturer.save();
+    }
+    abortBtn.classList.add("hidden");
   } else {
     setTimeout(() => {
       draw();
     }, 0);
 
+    abortBtn.classList.remove("hidden");
+
     observationPoint = 0;
     recordedFrames = 0;
     capturer.start();
+    downloadBtn.classList.add("disabled");
   }
 
   recording = !recording;
 
-  play.classList.toggle("hidden");
-  stop.classList.toggle("hidden");
+  abortBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleRecord(false);
+  });
+
+  // play.classList.toggle("hidden");
+  // stop.classList.toggle("hidden");
 }
 
-const donwloadBtn = document.querySelector(".download");
-donwloadBtn.addEventListener("click", dowload);
+const downloadBtn = document.querySelector(".download");
+downloadBtn.addEventListener("click", dowload);
 
-recordBtn.addEventListener("click", toggleRecord);
+// recordBtn.addEventListener("click", toggleRecord);
+
+function toggleAnimation() {
+  // downloadBtn.classList.toggle("disabled");
+  // recordBtn.classList.toggle("disabled");
+}
 
 class Point {
   constructor({ pos }) {
@@ -184,4 +227,4 @@ window.preload = preload;
 window.setup = setup;
 window.draw = draw;
 
-export { n, resize, restart };
+export { n, resize, restart, toggleAnimation };

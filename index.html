@@ -25,8 +25,19 @@
   <body>
     <div class="overlay">
       <div class="commands"></div>
-      <button class="download">Download</button>
-      <button class="record">
+      <button class="download">
+        <span>
+          Download
+          <span class="progress-percentage"></span>
+        </span>
+        <span class="progress"></span>
+        <div class="abort hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>          
+        </span>
+      </button>
+      <button class="record hidden">
         <div class="flex play">
           <p>Record</p>
           <svg
@@ -43,7 +54,7 @@
             />
           </svg>
         </div>
-        <div class="flex stop hidden">
+        <div class="flex stop">
           <p>Stop</p>
           <svg
             xmlns="http://www.w3.org/2000/svg"

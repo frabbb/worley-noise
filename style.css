@@ -56,6 +56,11 @@ button {
   background-color: white;
   font-weight: bold;
   cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
 
 button:hover {
@@ -63,7 +68,21 @@ button:hover {
 }
 
 button svg {
-  height: 15px;
+  height: 13px;
+}
+
+button .progress {
+  height: 3px;
+  background-color: grey;
+  width: var(--progress);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+button span {
+  display: inline-block;
+  height: fit-content;
 }
 
 .flex {
@@ -73,8 +92,25 @@ button svg {
   gap: 5px;
 }
 
-.hidden {
-  display: none;
+button.disabled {
+  pointer-events: none;
+}
+
+button.disabled {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+button .abort {
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  aspect-ratio: 1/ 1;
+  height: 18px;
+  width: 18px;
+  pointer-events: all;
 }
 
 .commands {
@@ -210,4 +246,8 @@ input[type="range"] {
 #fromSlider {
   height: 0;
   z-index: 1;
+}
+
+.hidden {
+  display: none !important;
 }
