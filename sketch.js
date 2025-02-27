@@ -194,7 +194,7 @@ function toggleRecord(shouldSave = true) {
 
     abortBtn.classList.remove("hidden");
 
-    observationPoint = 0;
+    // observationPoint = 0;
     recordedFrames = 0;
     capturer.start();
     downloadBtn.classList.add("disabled");
