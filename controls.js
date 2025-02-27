@@ -113,7 +113,7 @@ let controls = [
         key: "duration",
         type: "number",
         min: 1,
-        max: 30,
+        max: 60,
         value: 10,
         onUpdate: (field) => {
           settings.duration = Math.max(Math.min(settings.duration, 30), 1);
