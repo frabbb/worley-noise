@@ -44,6 +44,8 @@ function preload() {
     framerate: fps,
     format: "webm",
     name: "worley",
+    quality: 100,
+    videoBitsPerSecond: 5e6,
   });
 }
 
