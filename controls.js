@@ -1,6 +1,9 @@
-import { n, resize, restart, toggleAnimation } from "./sketch.js";
+import { n, resize, restart, toggleAnimation, recording } from "./sketch.js";
 
 const container = document.querySelector(".commands");
+
+let settings = {};
+
 let controls = [
   {
     key: "canvas",
@@ -103,9 +106,23 @@ let controls = [
       },
     ],
   },
+  {
+    fields: [
+      {
+        label: "Video duration (s)",
+        key: "duration",
+        type: "number",
+        min: 1,
+        max: 30,
+        value: 10,
+        onUpdate: (field) => {
+          settings.duration = Math.max(Math.min(settings.duration, 30), 1);
+          field.el.value = settings.duration;
+        },
+      },
+    ],
+  },
 ];
-
-let settings = {};
 
 controls.forEach((group) => {
   let target = settings;
@@ -285,14 +302,14 @@ controls.forEach((group) => {
       }
 
       if (field.onUpdate) {
-        field.onUpdate();
+        field.onUpdate(field);
       }
     });
   });
 });
 
 document.addEventListener("keypress", (e) => {
-  if (e.code === "Space") {
+  if (e.code === "Space" && !recording) {
     settings.animate = !settings.animate;
 
     const field = controls

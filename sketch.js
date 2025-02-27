@@ -21,6 +21,7 @@ let fps = 30;
 let progressEl = document.querySelector(".progress");
 let progressPercentageEl = document.querySelector(".progress-percentage");
 let abortBtn = document.querySelector(".abort");
+let controls = document.querySelector(".commands");
 
 function createPoints() {
   points = [];
@@ -61,9 +62,11 @@ function draw() {
   if (paused) return;
   background(220);
 
-  timeLimit = Math.round(
-    (settings.zDistribution * 2) / (settings.speed * speedMultiplier)
-  );
+  // timeLimit = Math.round(
+  //   (settings.zDistribution * 2) / (settings.speed * speedMultiplier)
+  // );
+
+  timeLimit = settings.duration * 30;
 
   delta = settings.speed * speedMultiplier;
 
@@ -161,6 +164,7 @@ async function restart() {
 }
 
 function dowload() {
+  if (recording) return;
   if (!settings.animate) {
     saveCanvas("worley.jpg");
   } else {
@@ -197,6 +201,7 @@ function toggleRecord(shouldSave = true) {
   }
 
   recording = !recording;
+  controls.classList.toggle("disabled");
 
   abortBtn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -227,4 +232,4 @@ window.preload = preload;
 window.setup = setup;
 window.draw = draw;
 
-export { n, resize, restart, toggleAnimation };
+export { n, resize, restart, toggleAnimation, recording };
