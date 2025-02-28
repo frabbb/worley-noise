@@ -47,6 +47,9 @@ canvas.static {
   padding: 10px;
   display: grid;
   gap: 10px;
+
+  max-height: calc(100vh - 2 * 10px);
+  overflow: auoìto;
 }
 
 button {
