@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sketch</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    
+    <script src="http://unpkg.com/tone"></script>
+
+    <script src="libraries/p5.min.js"></script>
+    <!-- <script src="libraries/p5.sound.min.js"></script> -->
+
+    <script src="libraries/CCapture.min.js"></script>
+    <!-- Include WebM Writer if you want to export WebM -->
+    <script src="libraries/webm-writer-0.2.0.js"></script>
+    <!-- Include gifjs if you want to export GIF -->
+    <script src="libraries/gif.js"></script>
+    <!-- Include tar.js if you want to export PNG or JPEG -->
+    <script src="libraries/tar.js"></script>
+    <!-- Include download.js for easier file download -->
+    <script src="libraries/download.js"></script>
+
+  </head>
+
+  <body>
+    <div class="overlay">
+      <div class="commands hidden"></div>
+      <button class="download hidden">
+        <span>
+          Download
+          <span class="progress-percentage"></span>
+        </span>
+        <span class="progress"></span>
+        <div class="abort hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>          
+        </span>
+      </button>
+      <button class="record hidden">
+        <div class="flex play">
+          <p>Record</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+            />
+          </svg>
+        </div>
+        <div class="flex stop">
+          <p>Stop</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z"
+            />
+          </svg>
+        </div>
+      </button>
+    </div>
+
+    <script src="controls.js" type="module"></script>
+    <script src="sketch-sound.js" type="module"></script>
+  </body>
+</html>
