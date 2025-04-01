@@ -83,7 +83,11 @@ function draw() {
     observationPoint += delta;
   }
 
-  const normalizedMouse = [mouseX / width, (height - mouseY) / height];
+  const normalizedMouse = [
+    mouseX / width,
+    (height - mouseY) / height,
+    observationPoint,
+  ];
 
   worleyShader.setUniform("u_z", observationPoint);
 
@@ -91,7 +95,7 @@ function draw() {
 
   worleyShader.setUniform("u_points", [
     ...points.flatMap((p) => [p.pos.x, p.pos.y, p.pos.z]),
-    // ...normalizedMouse,
+    ...normalizedMouse,
     observationPoint,
   ]);
 
