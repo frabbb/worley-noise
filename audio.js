@@ -56,6 +56,7 @@ let audioControls;
 let playPauseButton;
 let progressBar;
 let progressIndicator;
+let progressIndicatorBottom;
 let progressContainer;
 let timeDisplay;
 let isDraggingProgress = false;
@@ -63,13 +64,39 @@ let scanButton;
 let isScanning = false;
 let scanProgress = 0;
 let scanInterval = 0.5; // How many seconds to jump when scanning
-let saveButton;
-let loadFileInput;
-let loadButton;
 
 // Constants for local storage
 const AUDIO_PARAMS_STORAGE_KEY = "audio_parameters";
 const CURRENT_AUDIO_FILE_KEY = "current_audio_file";
+
+let timer;
+let controlsVisible = true;
+
+function hideControls() {
+  // clearTimeout(timer);
+
+  // timer = setTimeout(() => {
+  audioControls.style("opacity", 0);
+  progressIndicatorBottom.style("opacity", 1);
+  document.body.style.cursor = "none";
+  // }, 3000);
+}
+
+function showControls() {
+  audioControls.style("opacity", 1);
+  progressIndicatorBottom.style("opacity", 0);
+  document.body.style.cursor = "auto";
+  // hideControls();
+}
+
+window.addEventListener("click", () => {
+  if (controlsVisible) {
+    hideControls();
+  } else {
+    showControls();
+  }
+  controlsVisible = !controlsVisible;
+});
 
 function preloadAudio() {
   // Load sound file from assets folder
@@ -104,7 +131,7 @@ function setupAudio() {
   createAudioControls();
 
   // Create audio toggle button
-  createAudioToggleButton();
+  // createAudioToggleButton();
 
   // Create audio visualization panel
   createAudioVisualizationPanel();
@@ -148,6 +175,9 @@ function createAudioControls() {
   progressIndicator = createDiv();
   progressIndicator.addClass("progress-indicator");
   progressIndicator.parent(progressBar);
+
+  progressIndicatorBottom = createDiv();
+  progressIndicatorBottom.addClass("progress-indicator-bottom");
 
   // Time display
   timeDisplay = createDiv("0:00 / 0:00");
@@ -264,7 +294,6 @@ function createAudioControls() {
     
     .time-display {
       color: white;
-      font-family: monospace;
       font-size: 12px;
       min-width: 80px;
       text-align: right;
@@ -283,7 +312,6 @@ function createAudioControls() {
     
     .parameter-value {
       position: absolute;
-      font-family: monospace;
       font-size: 8px;
       color: white;
       background: rgba(0,0,0,0.7);
@@ -345,7 +373,6 @@ function createAudioControls() {
     .bar-label {
       font-size: 12px;
       margin-bottom: 5px;
-      font-weight: bold;
     }
     
     .bar-outer {
@@ -369,7 +396,6 @@ function createAudioControls() {
     
     .bar-value {
       font-size: 10px;
-      font-family: monospace;
       text-align: center; /* Center the text */
       width: 100%; /* Ensure it takes full width of column */
     }
@@ -383,7 +409,6 @@ function createAudioControls() {
     
     .min-max-value {
       font-size: 9px;
-      font-family: monospace;
       text-align: center;
       width: 100%;
       color: rgba(255, 255, 255, 0.7);
@@ -543,6 +568,8 @@ function createAudioVisualizationPanel() {
     }
   `;
   document.head.appendChild(style);
+
+  hideControls();
 }
 
 function updateAudioVisualization(audioParams) {
@@ -587,27 +614,23 @@ function updateAudioVisualization(audioParams) {
     audioParams.levelMax.toFixed(3);
 
   // Show both raw and normalized values in the text
-  document.getElementById(
-    "bass-value"
-  ).textContent = `${audioParams.bass.toFixed(2)} (${normalizedBass.toFixed(
+  document.getElementById("bass-value").innerHTML = `${audioParams.bass.toFixed(
     2
-  )})`;
-  document.getElementById("mid-value").textContent = `${audioParams.mid.toFixed(
+  )} <br> (${normalizedBass.toFixed(2)})`;
+  document.getElementById("mid-value").innerHTML = `${audioParams.mid.toFixed(
     2
-  )} (${normalizedMid.toFixed(2)})`;
-  document.getElementById(
-    "high-value"
-  ).textContent = `${audioParams.high.toFixed(2)} (${normalizedHigh.toFixed(
+  )} <br> (${normalizedMid.toFixed(2)})`;
+  document.getElementById("high-value").innerHTML = `${audioParams.high.toFixed(
     2
-  )})`;
-  document.getElementById("avg-value").textContent = `${audioParams.avg.toFixed(
+  )} <br> (${normalizedHigh.toFixed(2)})`;
+  document.getElementById("avg-value").innerHTML = `${audioParams.avg.toFixed(
     2
-  )} (${normalizedAvg.toFixed(2)})`;
+  )} <br> (${normalizedAvg.toFixed(2)})`;
   document.getElementById(
     "level-value"
-  ).textContent = `${audioParams.level.toFixed(2)} (${normalizedLevel.toFixed(
+  ).innerHTML = `${audioParams.level.toFixed(
     2
-  )})`;
+  )} <br> (${normalizedLevel.toFixed(2)})`;
 }
 
 // Save parameters to localStorage
@@ -775,6 +798,7 @@ function updateAudioControls() {
     const duration = sound.duration();
     const progress = (currentTime / duration) * 100;
     progressIndicator.style("width", `${progress}%`);
+    progressIndicatorBottom.style("width", `${progress}%`);
 
     // Update time display
     timeDisplay.html(`${formatTime(currentTime)} / ${formatTime(duration)}`);
@@ -1099,11 +1123,9 @@ function setNormalizedEasing(value) {
     // Visual feedback - briefly highlight the value
     easingDisplay.style.transition = "color 0.5s";
     easingDisplay.style.color = "white";
-    easingDisplay.style.fontWeight = "bold";
 
     setTimeout(() => {
       easingDisplay.style.color = "";
-      easingDisplay.style.fontWeight = "";
     }, 800);
   }
 

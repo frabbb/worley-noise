@@ -166,7 +166,7 @@ function draw() {
   worleyShader.setUniform("u_z", observationPoint);
   worleyShader.setUniform("u_ratio", width / height);
   worleyShader.setUniform("u_time", frameCount / 100);
-  worleyShader.setUniform("u_mouse", normalizedMouse);
+  // worleyShader.setUniform("u_mouse", normalizedMouse);
 
   // Add audio uniforms if available
   if (isAudioReactive()) {

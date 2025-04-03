@@ -120,7 +120,6 @@ function initializeAudio() {
           );
           statusText.position(20, 60);
           statusText.style("color", "green");
-          statusText.style("font-weight", "bold");
 
           audioInitialized = true;
           console.log("Enhanced audio system initialized and running");
