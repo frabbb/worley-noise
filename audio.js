@@ -431,6 +431,7 @@ function createAudioControls() {
     
     .panel-hint {
       font-size: 10px;
+      width: 100%;
       opacity: 0.7;
       text-align: center;
       margin-top: 10px;
@@ -544,9 +545,6 @@ function createAudioVisualizationPanel() {
     </div>
     <div class="controls-info">
       <div class="panel-hint">Values: raw (normalized)</div>
-      <div class="easing-info">Easing: <span id="easing-value">${normalizedEasingFactor.toFixed(
-        2
-      )}</span> [+/- to adjust]</div>
     </div>
   `;
 
